@@ -5,7 +5,7 @@ This repository hosts a short perspective paper that examines why test-centric q
 Rather than focusing on tools or implementation details, the paper explores how quality signals can be interpreted to support consistent, explainable release and operational decisions as systems and teams grow.
 
 📄 **White Paper**  
-[Testing at Scale: A Decision-Centric Model (PDF)](docs/Testing-at-a-scale.pdf)
+[Testing at a Scale (PDF)](docs/Testing%20at%20a%20scale.pdf)
 
 ---
 
