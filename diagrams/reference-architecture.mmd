@@ -1,47 +1,44 @@
 flowchart LR
-  %% Quality Orchestration Reference Architecture (GitHub-safe)
+  %% =========================================
+  %% Diagram 1: Quality Orchestration (Leader View)
+  %% Left → Right narrative
+  %% Vertical stacks inside boxes
+  %% =========================================
 
-  subgraph SP["Signal Producers"]
-    T["Tests<br/>(unit / integration / system)"]
-    P["Pre-prod validations<br/>(env checks, contract checks)"]
-    O["Operational telemetry<br/>(logs, metrics, traces)"]
-    I["Incidents & defects<br/>(post-release learnings)"]
-    C["Customer impact<br/>(support, UX signals)"]
+  %% INPUTS (VERTICAL STACK)
+  subgraph IN["Quality Signals (Inputs)"]
+    direction TB
+    IN1["Tests & validation results"]
+    IN2["Production behavior<br/>(availability, errors, latency)"]
+    IN3["Customer impact<br/>(support, UX signals)"]
   end
 
-  subgraph QO["Quality Orchestration Layer"]
-    IN["Ingestion"]
-    N["Normalization"]
-    CA["Confidence assessment<br/>(reliability, environment, history)"]
-    CR["Correlation<br/>(across signals + time)"]
-    PE["Policy evaluation<br/>(thresholds, risk tolerance)"]
-    OUT["Decision outputs"]
+  %% DECISION BRAIN (VERTICAL STACK)
+  subgraph QB["Quality Orchestration (Decision Brain)"]
+    direction TB
+    QB1["Signal confidence<br/>(reliability & freshness)"]
+    QB2["Risk interpretation<br/>(what changed & what matters)"]
+    QB3["Policy alignment<br/>(risk tolerance & thresholds)"]
   end
 
-  subgraph SC["Signal Consumers"]
-    CICD["CI/CD gates & promotions"]
-    REL["Release decisions<br/>(change governance)"]
-    LEAD["Leadership visibility<br/>(risk & confidence)"]
-    OPS["Ops response<br/>(triage & recovery)"]
+  %% OUTPUTS (VERTICAL STACK – already correct)
+  subgraph OUT["Decisions (Outputs)"]
+    direction TB
+    OUT1["Release readiness"]
+    OUT2["CI/CD gating guidance"]
+    OUT3["Ops response priorities"]
+    OUT4["Leadership visibility<br/>(risk & confidence)"]
   end
 
-  %% Producers -> Orchestration
-  T --> IN
-  P --> IN
-  O --> IN
-  I --> IN
-  C --> IN
+  %% PRIMARY FLOW (BOX TO BOX ONLY)
+  IN --> QB --> OUT
 
-  %% Orchestration pipeline
-  IN --> N --> CA --> CR --> PE --> OUT
+  %% LEARNING LOOP (BOTTOM, NON-INTRUSIVE)
+  subgraph LEARN["Learning & Outcomes"]
+    direction TB
+    L1["Incidents & defects<br/>(post-release outcomes)"]
+  end
 
-  %% Outputs -> Consumers
-  OUT --> CICD
-  OUT --> REL
-  OUT --> LEAD
-  OUT --> OPS
-
-  %% Feedback loops
-  OPS -. "feedback" .-> I
-  REL -. "outcomes" .-> I
-  LEAD -. "policy tuning" .-> PE
+  OUT3 --> L1
+  OUT1 --> L1
+  L1 -. "refines confidence & policy" .-> QB
