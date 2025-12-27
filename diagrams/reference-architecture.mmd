@@ -1,1 +1,50 @@
+flowchart LR
+  %% =========================
+  %% Quality Orchestration Reference Architecture
+  %% =========================
+
+  subgraph SP[Signal Producers]
+    T[Tests\n(unit/integration/system)]
+    P[Pre-prod validations\n(env checks, contract checks)]
+    O[Operational telemetry\n(traces/logs/metrics)]
+    I[Incidents & defects\n(post-release learnings)]
+    C[Customer impact\n(support, UX signals)]
+  end
+
+  subgraph QO[Quality Orchestration Layer]
+    IN[Ingestion]
+    N[Normalization]
+    CA[Confidence assessment\n(reliability, environment, history)]
+    CR[Correlation\n(across signals + time)]
+    PE[Policy evaluation\n(thresholds, risk tolerance)]
+    OUT[Decision outputs]
+  end
+
+  subgraph SC[Signal Consumers]
+    CICD[CI/CD gates & promotions]
+    REL[Release decisions & change governance]
+    LEAD[Leadership visibility\n(risk & confidence)]
+    OPS[Ops response\n(triage & recovery)]
+  end
+
+  %% Flows from producers into orchestration
+  T --> IN
+  P --> IN
+  O --> IN
+  I --> IN
+  C --> IN
+
+  %% Orchestration pipeline
+  IN --> N --> CA --> CR --> PE --> OUT
+
+  %% Outputs to consumers
+  OUT --> CICD
+  OUT --> REL
+  OUT --> LEAD
+  OUT --> OPS
+
+  %% Feedback loops (post-release learning back into orchestration)
+  OPS -. feedback .-> I
+  REL -. outcomes .-> I
+  LEAD -. policy tuning .-> PE
 
