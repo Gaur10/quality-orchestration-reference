@@ -1,44 +1,38 @@
 flowchart LR
-  %% =========================================
   %% Diagram 1: Quality Orchestration (Leader View)
-  %% Left → Right narrative
-  %% Vertical stacks inside boxes
-  %% =========================================
+  %% Workaround: force vertical stacking via hidden links
 
-  %% INPUTS (VERTICAL STACK)
   subgraph IN["Quality Signals (Inputs)"]
-    direction TB
     IN1["Tests & validation results"]
     IN2["Production behavior<br/>(availability, errors, latency)"]
     IN3["Customer impact<br/>(support, UX signals)"]
+    IN1 --> IN2 --> IN3
+    linkStyle 0 stroke:transparent;
+    linkStyle 1 stroke:transparent;
   end
 
-  %% DECISION BRAIN (VERTICAL STACK)
   subgraph QB["Quality Orchestration (Decision Brain)"]
-    direction TB
     QB1["Signal confidence<br/>(reliability & freshness)"]
     QB2["Risk interpretation<br/>(what changed & what matters)"]
     QB3["Policy alignment<br/>(risk tolerance & thresholds)"]
+    QB1 --> QB2 --> QB3
+    linkStyle 2 stroke:transparent;
+    linkStyle 3 stroke:transparent;
   end
 
-  %% OUTPUTS (VERTICAL STACK – already correct)
   subgraph OUT["Decisions (Outputs)"]
-    direction TB
     OUT1["Release readiness"]
     OUT2["CI/CD gating guidance"]
     OUT3["Ops response priorities"]
     OUT4["Leadership visibility<br/>(risk & confidence)"]
   end
 
-  %% PRIMARY FLOW (BOX TO BOX ONLY)
   IN --> QB --> OUT
 
-  %% LEARNING LOOP (BOTTOM, NON-INTRUSIVE)
   subgraph LEARN["Learning & Outcomes"]
-    direction TB
     L1["Incidents & defects<br/>(post-release outcomes)"]
   end
 
-  OUT3 --> L1
   OUT1 --> L1
+  OUT3 --> L1
   L1 -. "refines confidence & policy" .-> QB
